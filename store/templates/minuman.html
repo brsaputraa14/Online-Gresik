@@ -1,0 +1,364 @@
+{% extends 'base.html' %}{% load static %} {% load auth_extras %}{% load category %}{% load cart_product %}{% block content %}
+<div class="dropdown cart-dropdown">
+  <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+    <div class="icon">
+      <i class="icon-shopping-cart" title="keranjang"></i>
+      {% if request.user.is_authenticated %}
+      <span class="cart-count">{{request.user|cart_count}}</span>
+      {% else %}
+      <span class="cart-count">0</span>
+      {% endif %}
+    </div>
+    <p>Cart</p>
+  </a>
+
+  <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-cart-products">
+
+      {% if request.user|cart_view %}
+
+      {% for cart in request.user|cart_view %}
+      <div class="product">
+        {% if cart in request.user|cart_view %}
+        <div class="product-cart-details">
+          <h4 class="product-title">
+            <a href="{% url 'minuman_details' cart.item.slug %}">{{cart.item.name}}</a>
+            {{cart.name}}
+          </h4>
+
+          <span class="cart-product-info">
+            <span class="cart-product-qty">{{cart.quantity}}</span>
+            x Rp {{cart.get_total}}
+          </span>
+        </div>
+        <!-- End .product-cart-details -->
+
+        <figure class="product-image-container">
+          <a href="product.html" class="product-image">
+            <img src="{{cart.item.img.url}}" alt="product" />
+          </a>
+        </figure>
+      {% else %}
+      <h6>Kosong</h6> 
+      {% endif %}
+      {% if cart in request.user|cart_view %}
+      
+        <a href="{% url 'order:delete_cart_home_home' pk=cart.item.pk %}" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+        {% else %}
+        
+        {% endif %}
+      </div>
+      <!-- End .product -->
+
+      {% endfor %}
+      {% else %}
+      <div class="product">
+            Kosong
+          </div>
+
+      
+{% endif %}
+
+     
+    <!-- End .cart-product -->
+
+    <div class="dropdown-cart-total">
+      {% if request.user|cart_total %}
+        
+      <span>Total</span>
+      <span class="cart-total-price">Rp {{request.user|cart_total|floatformat:3}}</span>
+      {% else %}
+
+      {% endif %}
+    </div>
+    <!-- End .dropdown-cart-total -->
+    {% if request.user|cart_total %}
+    <div class="dropdown-cart-action">
+      <p hidden>{{request.user|cart_total|floatformat:3}}</p>
+      <a href="{% url 'order:cart' %}" class="btn btn-primary">View Cart</a>
+      <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+    </div>
+    {% else %}
+    <div class="dropdown-cart-action">
+      
+    </div>
+    {% endif %}
+      
+    </div>
+    <!-- End .dropdown-cart-total -->
+  </div>
+  <!-- End .dropdown-menu -->
+</div>
+<!-- End .cart-dropdown -->
+</div>
+<!-- End .header-right -->
+</div>
+<!-- End .container -->
+</div>
+<!-- End .header-middle -->
+
+<div class="header-bottom sticky-header">
+<div class="container">
+<div class="header-left">
+<div class="dropdown category-dropdown" hidden>
+  <a href="tes" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Browse Categories"> Category <i class="icon-angle-down"></i> </a>
+
+  <div class="dropdown-menu">
+    <nav class="side-nav">
+      <ul class="menu-vertical sf-arrows">
+          {% for cat in request.user|category %}
+          {% if not cat.childern.all %}
+        <li class="item-lead"><a href="{{cat.name}}">{{cat.name}}</a></li>
+        {% else %}
+        <li class="item-lead"><a href="{{cat.name}}">{{cat.name}}</a>
+          <ul>
+              {% for subcategory in cat.childern.all %}
+              <li>
+                  <a href="s">{{subcategory.name}}</a>
+              </li>
+          </li>
+                      {% endfor %}
+          </ul>
+      </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- End .menu-vertical -->
+    </nav>
+    <!-- End .side-nav -->
+  </div>
+  <!-- End .dropdown-menu -->
+</div>
+<!-- End .category-dropdown -->
+</div>
+<!-- End .header-left -->
+
+<div class="header-center">
+<nav class="main-nav">
+  <ul class="menu sf-arrows">
+    <li class="megamenu-container active">
+      <a href="{% url 'home'%}" class="sf-with-ul">Home</a>
+
+      
+    </li>
+    <li>
+      <a href="#" class="sf-with-ul">Menu</a>
+
+      <ul>
+        <li>
+          {% for cat in request.user|category %}
+          {% if not cat.childern.all %}
+        <li class="item-lead"><a href="/{{cat.name}}">{{cat.name}}</a></li>
+        {% else %}
+        <li class="item-lead"><a href="/{{cat.name}}">{{cat.name}}</a>
+          <ul>
+              {% for subcategory in cat.childern.all %}
+              <li>
+                  <a href="{{cat.name}}">{{subcategory.name}}</a>
+              </li>
+          </li>
+                      {% endfor %}
+          </ul>
+      </li>
+        {% endif %}
+        {% endfor %}
+
+
+        
+
+      </ul>
+    </li>
+{% if request.user|has_group:"operator" %}
+    <li>
+      <a href="{% url 'cpage' %}" class="sf-with-ul">Admin</a>
+
+      <div class="megamenu megamenu-sm">
+        <div class="row no-gutters">
+          <div class="col-md-6">
+            <div class="menu-col">
+              <div class="menu-title">Admin | Control </div>
+              <!-- End .menu-title -->
+              <ul>
+                <li><a href="{% url 'makanan' %}">Makanan</a></li>
+                <li><a href="{% url 'minuman' %}">Minuman</a></li>
+                
+              </ul>
+            </div>
+            <!-- End .menu-col -->
+          </div>
+          <!-- End .col-md-6 -->
+
+          <div class="col-md-6">
+            <div class="banner banner-overlay">
+              <a href="category.html">
+                <img src="{% static 'assets/images/menu/banner-2.jpg' %}" alt="Banner" />
+
+                <div class="banner-content banner-content-bottom">
+                  <div class="banner-title text-white">
+                    New Trends<br /><span><strong>spring 2019</strong></span>
+                  </div>
+                  <!-- End .banner-title -->
+                </div>
+                <!-- End .banner-content -->
+              </a>
+            </div>
+            <!-- End .banner -->
+          </div>
+          <!-- End .col-md-6 -->
+        </div>
+        <!-- End .row -->
+      </div>
+      <!-- End .megamenu megamenu-sm -->
+    </li>
+{% endif %}
+   
+    
+  </ul>
+  <!-- End .menu -->
+</nav>
+<!-- End .main-nav -->
+</div>
+<!-- End .header-center -->
+
+<div class="header-right">
+<i class="la la-lightbulb-o"></i>
+<p>Online<span class="highlight">&nbsp;Warung makan gresik</span></p>
+</div>
+</div>
+<!-- End .container -->
+</div>
+<!-- End .header-bottom -->
+</header>
+<!-- End .header -->
+<main class="main">
+  <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+    <div class="container d-flex align-items-center">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Online</a></li>
+        <li class="breadcrumb-item"><a href="#">{{item.category}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{item.name}}</li>
+      </ol>
+
+     
+      <!-- End .pager-nav -->
+    </div>
+    <!-- End .container -->
+  </nav>
+  <!-- End .breadcrumb-nav -->
+
+  <div class="page-content">
+    <div class="container">
+      <div class="product-details-top">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="product-gallery product-gallery-vertical">
+              <div class="row">
+                <figure class="product-main-image">
+                  <img id="product-zoom" src="{{item.img.url}}" data-zoom-image="{{item.img.url}}" alt="product image" />
+
+                  <a href="{{item.img.url}}" id="btn-product-gallery" class="btn-product-gallery">
+                    <i class="icon-arrows"></i>
+                  </a>
+                </figure>
+                <!-- End .product-main-image -->
+                {% if product_images %}
+                <div id="product-zoom-gallery" class="product-image-gallery">
+                  {% for d in product_images %}
+                  <a class="product-gallery-item active" href="{{d.image.url}}" data-image="{{d.image.url}}" data-zoom-image="{{d.image.url}}">
+                    <img src="{{d.image.url}}" alt="product side" />
+                  </a>
+
+                  {% endfor %}
+                </div>
+                <!-- End .product-image-gallery -->
+                {% endif %}
+              </div>
+              <!-- End .row -->
+            </div>
+            <!-- End .product-gallery -->
+          </div>
+          <!-- End .col-md-6 -->
+
+          <div class="col-md-6">
+            <div class="product-details">
+              <h1 class="product-title">{{item.name}}</h1>
+              <!-- End .product-title -->
+
+              <div class="ratings-container">
+                <div class="ratings">
+                  <div class="ratings-val" style="width: 80%"></div>
+                  <!-- End .ratings-val -->
+                </div>
+                <!-- End .ratings -->
+              </div>
+              <!-- End .rating-container -->
+
+              <div class="product-price">Rp {{item.price|floatformat:3}}</div>
+              <!-- End .product-price -->
+              {% if item.old_price %}
+              <del class="product-price" style="color:red;font-size:13px;"> Rp {{item.old_price|floatformat:3}} </del
+              ><!-- End .product-price -->
+              {% endif %}
+              <div class="product-content">
+                <p>{{item.preview_des}}</p>
+              </div>
+              <!-- End .product-content -->
+
+              {% comment %}
+              <div class="details-filter-row details-row-size">
+                <label>Color:</label>
+
+                <div class="product-nav product-nav-thumbs">
+                  <a href="#" class="active">
+                    <img src="assets/images/products/single/1-thumb.jpg" alt="product desc" />
+                  </a>
+                  <a href="#">
+                    <img src="assets/images/products/single/2-thumb.jpg" alt="product desc" />
+                  </a>
+                </div>
+                <!-- End .product-nav -->
+                {% endcomment %}
+              </div>
+              <!-- End .details-filter-row -->
+              <form method="post" action="{% url 'order:add-to-cart_minuman' pk=item.pk %}">
+                {% csrf_token %}{% comment %}  {% if item.variationvalue_set.jeniss %}
+                <div class="details-filter-row details-row-size">
+                  <label for="jenis">Jenis :</label>
+                  <div class="select-custom">
+                    <select name="jenis" id="size" class="form-control">
+                      <option value="Tidak ada" selected="selected">Silahkan pilih jenis</option>
+                      {% for item_variations in item.variationvalue_set.jeniss %}
+                      <option value="{{item_variations.name}}">{{item_variations.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <!-- End .product-nav -->
+                </div>
+                <!-- End .details-filter-row -->
+                {% endif %} {% endcomment %}
+                <div class="details-filter-row details-row-size">
+                    <label for="qty">Qty:</label>
+                    <div class="product-details-quantity">
+                        <input type="number" id="qty" name="quantity" class="form-control" value="1" min="1" max="200" step="1" data-decimals="0" required>
+                    </div><!-- End .product-details-quantity -->
+                </div><!-- End .details-filter-row -->
+
+
+                <div class="product-details-action">
+                    <button type="submit" class="btn-product btn-cart" style="background:white;">add to cart</button>
+                    <div class="details-action-wrapper" hidden>
+                        <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                        <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a>
+                    </div><!-- End .details-action-wrapper -->
+                </div><!-- End .product-details-action -->
+            </form>
+                <div class="product-details-footer">
+                    <div class="product-cat">
+                        <span>Category:</span>
+                        <a href="#" style="color:black;font-size:14">{{item.category}}</a>
+
+                    </div><!-- End .product-cat --></div></div>{% include 'footer.html' %}
+       {% endblock content %}
+    </div>
+  </div>
+</main>

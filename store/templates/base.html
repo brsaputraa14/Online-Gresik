@@ -1,0 +1,253 @@
+{% load static %}  {% load category %} {% load cart_product %} {% load auth_extras %}
+<html lang="en">
+  <!-- molla/index-4.html  22 Nov 2019 09:53:08 GMT -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Warung Makan Gresik</title>
+    <meta name="description" content="Warung Makan Gresik" />
+    {% comment %}
+    <meta name="author" content="p-themes" />
+    {% endcomment %}
+    <!-- Favicon -->
+    {% comment %}
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png" />
+    <link rel="manifest" href="assets/images/icons/site.html" />
+    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666" />
+    <link rel="shortcut icon" href="assets/images/icons/favicon.ico" />
+    <meta name="apple-mobile-web-app-title" content="Molla" />
+    <meta name="application-name" content="Molla" />
+    <meta name="msapplication-TileColor" content="#cc9966" />
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="stylesheet" href="assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css" />
+    {% endcomment %}
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/iziToast.css' %}">
+<link rel="stylesheet" href="{% static 'css/iziToast.min.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/owl-carousel/owl.carousel.css' %}" />
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/magnific-popup/magnific-popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/jquery.countdown.css' %}" />
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'store/assets/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'store/assets/css/skins/skin-demo-4.css' %}" />
+    <link rel="stylesheet" href="{% static 'store/assets/css/demos/demo-4.css' %}" />
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <header class="header header-intro-clearance header-4">
+        <div class="header-top">
+          <div class="container">
+            <div class="header-left">
+              <a href="tel:#"><i class="icon-phone"></i>Call: +628 1258 8421 30</a>
+            </div>
+            <!-- End .header-left -->
+
+            <div class="header-right">
+              <ul class="top-menu">
+                <li>
+                  <a href="#">Links</a>
+                  <ul>
+                    <li>
+                      <div class="header-dropdown" hidden>
+                        <a href="#">USD</a>
+                        <div class="header-menu">
+                          <ul>
+                            <li><a href="#">Eur</a></li>
+                            <li><a href="#">Usd</a></li>
+                          </ul>
+                        </div>
+                        <!-- End .header-menu -->
+                      </div>
+                    </li>
+                    <li><a href="#" data-toggle="modal">Indonesia</a></li>
+                    <li>
+                      {% if request.user.is_authenticated %}
+                      <div class="header-dropdown">
+                        <a href="#">{{user}}</a>
+                        <div class="header-menu">
+                          <ul>
+                            <li><a href="{% url 'customerlogin' %}">Login</a></li>
+                            <li><a href="{% url 'register' %}">Register</a></li>
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                          </ul>
+                        </div>
+                        {% else %}
+                        <div class="header-dropdown">
+                          <a href="#">Account</a>
+                          <div class="header-menu">
+                            <ul>
+                              <li><a href="#">Login</a></li>
+                              <li><a href="#">Register</a></li>
+                              <li><a href="#">Logout</a></li>
+                            </ul>
+                          </div>
+                        {% endif %}
+                        <!-- End .header-menu -->
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <!-- End .top-menu -->
+            </div>
+            <!-- End .header-right -->
+          </div>
+          <!-- End .container -->
+        </div>
+        <!-- End .header-top -->
+
+        <div class="header-middle">
+          <div class="container">
+            <div class="header-left">
+              
+<style>
+    .tes {
+        color:blue;
+        font-size:17px;
+    }
+
+    .tes:hover{
+        color:black;
+    }
+
+    .logo:hover{
+        color:blue;
+        delay:5s;
+    }
+</style>
+              <a href="{% url 'home' %}" class="logo" style="font-size:21px">
+                Warung Makan Gresik
+              </a>
+            </div>
+            <!-- End .header-left -->
+
+            <div class="header-center" hidden>
+              <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
+                <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                <form action="#" method="get">
+                  <div class="header-search-wrapper search-wrapper-wide">
+                    <label for="q" class="sr-only">Search</label>
+                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required />
+                  </div>
+                  <!-- End .header-search-wrapper -->
+                </form>
+              </div>
+              <!-- End .header-search -->
+            </div>
+
+            <div class="header-right">
+              <div class="dropdown compare-dropdown" hidden>
+                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
+                  <div class="icon">
+                    <i class="icon-random"></i>
+                  </div>
+                  <p>Compare</p>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                  <ul class="compare-products">
+                    <li class="compare-product">
+                      <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                      <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
+                    </li>
+                    <li class="compare-product">
+                      <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                      <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
+                    </li>
+                  </ul>
+
+                  <div class="compare-actions">
+                    <a href="#" class="action-link">Clear All</a>
+                    <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
+                  </div>
+                </div>
+                <!-- End .dropdown-menu -->
+              </div>
+              <!-- End .compare-dropdown -->
+  {% if request.user|has_group:"operator" %}
+              <div class="wishlist">
+                <a href="{% url 'view_pembelian' %}" title="alamat pengguna" >
+                  <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-person-vcard icon" viewBox="0 0 16 16">
+                      <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z"/>
+                      <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z"/>
+                    </svg>
+                  </div>
+                  <p>Alamat Pengguna</p>
+                </a>
+              </div>
+  {% endif %}
+  {% if request.user|has_group:"kurir"%}
+              <div class="wishlist">
+                <a href="{% url 'view_pembelian2' %}" title="alamat pengguna" >
+                  <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-person-vcard" viewBox="0 0 16 16">
+                      <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5ZM9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8Zm1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Z"/>
+                      <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96c.026-.163.04-.33.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1.006 1.006 0 0 1 1 12V4Z"/>
+                    </svg>
+                  </div>
+                  <p>Alamat Pengguna</p>
+                </a>
+              </div>
+              <div class="wishlist">
+                <a href="{% url 'pembelian' %}" title="riwayat pembelian" >
+                  <div class="icon">
+                    <i class="bi bi-bag-check"></i>
+                  </div>
+                  <p>Riwayat pembelian</p>
+                </a>
+              </div>
+  {% else %}
+              <div class="wishlist">
+                <a href="{% url 'pembelian' %}" title="riwayat pembelian" >
+                  <div class="icon">
+                    <i class="bi bi-bag-check"></i>
+                  </div>
+                  <p>Riwayat pembelian</p>
+                </a>
+              </div>
+{% endif %}
+              <!-- End .compare-dropdown -->
+
+              
+  {% block content %}{% endblock content %}
+  {% block js %}
+   <!-- Plugins JS File -->
+   <script src="{% static 'store/assets/js/jquery.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/bootstrap.bundle.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/jquery.hoverIntent.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/jquery.waypoints.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/superfish.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/owl.carousel.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/bootstrap-input-spinner.js' %}"></script>
+   <script src="{% static 'store/assets/js/jquery.plugin.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/jquery.magnific-popup.min.js' %}"></script>
+   <script src="{% static 'store/assets/js/jquery.countdown.min.js' %}"></script>
+   <!-- Main JS File -->
+   <script src="{% static 'store/assets/js/main.js' %}"></script>
+   <script src="{% static 'store/assets/js/demos/demo-4.js' %}"></script>
+    <script src="{% static 'js/iziToast.js' %}"></script>
+  <script src="{% static 'js/iziToast.min.js' %}"></script>
+  {% if messages %}
+  {% for message in messages %}
+<script>
+
+iziToast.{{message.tags}}({
+  title: '{{message}}',
+  position: 'topRight'
+});  
+</script>
+    {% endfor %}
+    {% endif %}
+ </body>
+
+ <!-- molla/index-4.html  22 Nov 2019 09:54:18 GMT -->
+</html>{% endblock js %}

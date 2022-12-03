@@ -1,0 +1,247 @@
+{% extends 'base.html' %} {% block content %} {% load category %} {% load cart_product %} {% load auth_extras %} {% load static %}
+<div class="dropdown cart-dropdown">
+  <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+    <div class="icon">
+      <i class="icon-shopping-cart" title="keranjang"></i>
+      {% if request.user.is_authenticated %}
+      <span class="cart-count">{{request.user|cart_count}}</span>
+      {% else %}
+      <span class="cart-count">0</span>
+      {% endif %}
+    </div>
+    <p>Cart</p>
+  </a>
+
+  <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-cart-products">
+
+      {% if request.user|cart_view %}
+
+      {% for cart in request.user|cart_view %}
+      <div class="product">
+        {% if cart in request.user|cart_view %}
+        <div class="product-cart-details">
+          <h4 class="product-title">
+            <a href="{% url 'product_details' cart.item.slug %}">{{cart.item.name}}</a>
+            {{cart.name}}
+          </h4>
+
+          <span class="cart-product-info">
+            <span class="cart-product-qty">{{cart.quantity}}</span>
+            x Rp {{cart.get_total}}
+          </span>
+        </div>
+        <!-- End .product-cart-details -->
+
+        <figure class="product-image-container">
+          <a href="product.html" class="product-image">
+            <img src="{{cart.item.img.url}}" alt="product" />
+          </a>
+        </figure>
+      {% else %}
+      <h6>Kosong</h6> 
+      {% endif %}
+      {% if cart in request.user|cart_view %}
+      
+        <a href="{% url 'order:delete_cart_home' pk=cart.item.pk %}" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+        {% else %}
+        
+        {% endif %}
+      </div>
+      <!-- End .product -->
+
+      {% endfor %}
+      {% else %}
+      <div class="product">
+            Kosong
+          </div>
+
+      
+{% endif %}
+
+     
+    <!-- End .cart-product -->
+
+    <div class="dropdown-cart-total">
+      {% if request.user|cart_total %}
+        
+      <span>Total</span>
+      <span class="cart-total-price">Rp {{request.user|cart_total|floatformat:3}}</span>
+      {% else %}
+
+      {% endif %}
+    </div>
+    <!-- End .dropdown-cart-total -->
+    {% if request.user|cart_total %}
+    <div class="dropdown-cart-action">
+      <p hidden>{{request.user|cart_total|floatformat:3}}</p>
+      <a href="{% url 'order:cart' %}" class="btn btn-primary">View Cart</a>
+      <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+    </div>
+    {% else %}
+    <div class="dropdown-cart-action">
+      
+    </div>
+    {% endif %}
+      
+    </div>
+    <!-- End .dropdown-cart-total -->
+  </div>
+  <!-- End .dropdown-menu -->
+</div>
+<!-- End .cart-dropdown -->
+</div>
+<!-- End .header-right -->
+</div>
+<!-- End .container -->
+</div>
+<!-- End .header-middle -->
+
+<div class="header-bottom sticky-header">
+<div class="container">
+<div class="header-left">
+<div class="dropdown category-dropdown" hidden>
+  <a href="tes" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Browse Categories"> Category <i class="icon-angle-down"></i> </a>
+
+  <div class="dropdown-menu">
+    <nav class="side-nav">
+      <ul class="menu-vertical sf-arrows">
+          {% for cat in request.user|category %}
+          {% if not cat.childern.all %}
+        <li class="item-lead"><a href="{{cat.name}}">{{cat.name}}</a></li>
+        {% else %}
+        <li class="item-lead"><a href="{{cat.name}}">{{cat.name}}</a>
+          <ul>
+              {% for subcategory in cat.childern.all %}
+              <li>
+                  <a href="s">{{subcategory.name}}</a>
+              </li>
+          </li>
+                      {% endfor %}
+          </ul>
+      </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- End .menu-vertical -->
+    </nav>
+    <!-- End .side-nav -->
+  </div>
+  <!-- End .dropdown-menu -->
+</div>
+<!-- End .category-dropdown -->
+</div>
+<!-- End .header-left -->
+
+<div class="header-center">
+<nav class="main-nav">
+  <ul class="menu sf-arrows">
+    <li class="megamenu-container active">
+      <a href="{% url 'home'%}" class="sf-with-ul">Home</a>
+
+      
+    </li>
+    <li>
+      <a href="#" class="sf-with-ul">Menu</a>
+
+      <ul>
+        <li>
+          {% for cat in request.user|category %}
+          {% if not cat.childern.all %}
+        <li class="item-lead"><a href="/{{cat.name}}">{{cat.name}}</a></li>
+        {% else %}
+        <li class="item-lead"><a href="/{{cat.name}}">{{cat.name}}</a>
+          <ul>
+              {% for subcategory in cat.childern.all %}
+              <li>
+                  <a href="{{cat.name}}">{{subcategory.name}}</a>
+              </li>
+          </li>
+                      {% endfor %}
+          </ul>
+      </li>
+        {% endif %}
+        {% endfor %}
+
+
+        
+
+      </ul>
+    </li>
+{% if request.user|has_group:"operator" %}
+    <li>
+      <a href="{% url 'cpage' %}" class="sf-with-ul">Admin</a>
+
+      <div class="megamenu megamenu-sm">
+        <div class="row no-gutters">
+          <div class="col-md-6">
+            <div class="menu-col">
+              <div class="menu-title">Admin | Control </div>
+              <!-- End .menu-title -->
+              <ul>
+                <li><a href="{% url 'makanan' %}">Makanan</a></li>
+                <li><a href="{% url 'minuman' %}">Minuman</a></li>
+                
+              </ul>
+            </div>
+            <!-- End .menu-col -->
+          </div>
+          <!-- End .col-md-6 -->
+
+          <div class="col-md-6">
+            <div class="banner banner-overlay">
+              <a href="category.html">
+                <img src="{% static 'assets/images/menu/banner-2.jpg' %}" alt="Banner" />
+
+                <div class="banner-content banner-content-bottom">
+                  <div class="banner-title text-white">
+                    New Trends<br /><span><strong>spring 2019</strong></span>
+                  </div>
+                  <!-- End .banner-title -->
+                </div>
+                <!-- End .banner-content -->
+              </a>
+            </div>
+            <!-- End .banner -->
+          </div>
+          <!-- End .col-md-6 -->
+        </div>
+        <!-- End .row -->
+      </div>
+      <!-- End .megamenu megamenu-sm -->
+    </li>
+{% endif %}
+   
+    
+  </ul>
+  <!-- End .menu -->
+</nav>
+<!-- End .main-nav -->
+</div>
+<!-- End .header-center -->
+
+<div class="header-right">
+<i class="la la-lightbulb-o"></i>
+<p>Online<span class="highlight">&nbsp;Warung makan gresik</span></p>
+</div>
+</div>
+<!-- End .container -->
+</div>
+<!-- End .header-bottom -->
+</header>
+<!-- End .header -->
+<div class="row">
+  <div class="col-sm-8 offset-2">
+    <h2 class="alert alert-info">Konfirmasi Pembelian</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h4>
+        Apakah kamu ingin menkonfirmasi kode pesanan {{obj.code}}?</h4>
+
+        <a href="{% url 'pembelian' %}" class="btn btn-warning">Kembali</a>
+        <button type="submit" class="btn btn-success">Konfirmasi</button>
+      </p>
+    </form>
+  </div>
+</div>
+{% endblock content %}

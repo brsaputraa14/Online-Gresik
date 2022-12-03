@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+{% extends 'base.html' %} {% load static %} {% load category %}{% load cart_product %} {% load auth_extras %}{% block content %}
+<link rel="stylesheet" href="{% static 'css/iziToast.css' %}">
+<link rel="stylesheet" href="{% static 'css/iziToast.min.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<div class="dropdown cart-dropdown">
+  <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+    <div class="icon">
+      <i class="icon-shopping-cart" title="keranjang"></i>
+      {% if request.user.is_authenticated %}
+      <span class="cart-count">{{request.user|cart_count}}</span>
+      {% else %}
+      <span class="cart-count">0</span>
+      {% endif %}
+    </div>
+    <p>Cart</p>
+  </a>
+
+  <div class="dropdown-menu dropdown-menu-right">
+    <div class="dropdown-cart-products">
+
+      {% if request.user|cart_view %}
+
+      {% for cart in request.user|cart_view %}
+      <div class="product">
+        {% if cart in request.user|cart_view %}
+        <div class="product-cart-details">
+          <h4 class="product-title">
+            <a href="{% url 'product_details' cart.item.slug %}">{{cart.item.name}}</a>
+            {{cart.name}}
+          </h4>
+
+          <span class="cart-product-info">
+            <span class="cart-product-qty">{{cart.quantity}}</span>
+            x Rp {{cart.get_total}}
+          </span>
+        </div>
+        <!-- End .product-cart-details -->
+
+        <figure class="product-image-container">
+          <a href="product.html" class="product-image">
+            <img src="{{cart.item.img.url}}" alt="product" />
+          </a>
+        </figure>
+      {% else %}
+      <h6>Kosong</h6> 
+      {% endif %}
+      {% if cart in request.user|cart_view %}
+      
+        <a href="{% url 'order:delete_cart_home' pk=cart.item.pk %}" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+        {% else %}
+        
+        {% endif %}
+      </div>
+      <!-- End .product -->
+
+      {% endfor %}
+      {% else %}
+      <div class="product">
+            Kosong
+          </div>
+
+      
+{% endif %}
+
+     
+    <!-- End .cart-product -->
+
+    <div class="dropdown-cart-total">
+      {% if request.user|cart_total %}
+        
+      <span>Total</span>
+      <span class="cart-total-price">Rp {{request.user|cart_total|floatformat:3}}</span>
+      {% else %}
+
+      {% endif %}
+    </div>
+    <!-- End .dropdown-cart-total -->
+    {% if request.user|cart_total %}
+    <div class="dropdown-cart-action">
+      <p hidden>{{request.user|cart_total|floatformat:3}}</p>
+      <a href="{% url 'order:cart' %}" class="btn btn-primary">View Cart</a>
+      <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+    </div>
+    {% else %}
+    <div class="dropdown-cart-action">
+      
+    </div>
+    {% endif %}
+      
+    </div>
+    <!-- End .dropdown-cart-total -->
+  </div>
+  <!-- End .dropdown-menu -->
+</div>
+<!-- End .cart-dropdown -->
+</div>
+<!-- End .header-right -->
+</div>
+<!-- End .container -->
+</div>
+<!-- End .header-middle -->
+
+<div class="header-bottom sticky-header">
+<div class="container">
+<div class="header-left">
+<div class="dropdown category-dropdown" hidden>
+  <a href="tes" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Browse Categories"> Category <i class="icon-angle-down"></i> </a>
+
+  <div class="dropdown-menu">
+    <nav class="side-nav">
+      <ul class="menu-vertical sf-arrows">
+          {% for cat in request.user|category %}
+          {% if not cat.childern.all %}
+        <li class="item-lead"><a href="{{cat.name}}">{{cat.name}}</a></li>
+        {% else %}
+        <li class="item-lead"><a href="{{cat.name}}">{{cat.name}}</a>
+          <ul>
+              {% for subcategory in cat.childern.all %}
+              <li>
+                  <a href="s">{{subcategory.name}}</a>
+              </li>
+          </li>
+                      {% endfor %}
+          </ul>
+      </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- End .menu-vertical -->
+    </nav>
+    <!-- End .side-nav -->
+  </div>
+  <!-- End .dropdown-menu -->
+</div>
+<!-- End .category-dropdown -->
+</div>
+<!-- End .header-left -->
+
+<div class="header-center">
+<nav class="main-nav">
+  <ul class="menu sf-arrows">
+    <li class="megamenu-container active">
+      <a href="{% url 'home'%}" class="sf-with-ul">Home</a>
+
+      
+    </li>
+    <li>
+      <a href="#" class="sf-with-ul">Menu</a>
+
+      <ul>
+        <li>
+          {% for cat in request.user|category %}
+          {% if not cat.childern.all %}
+        <li class="item-lead"><a href="/{{cat.name}}">{{cat.name}}</a></li>
+        {% else %}
+        <li class="item-lead"><a href="/{{cat.name}}">{{cat.name}}</a>
+          <ul>
+              {% for subcategory in cat.childern.all %}
+              <li>
+                  <a href="{{cat.name}}">{{subcategory.name}}</a>
+              </li>
+          </li>
+                      {% endfor %}
+          </ul>
+      </li>
+        {% endif %}
+        {% endfor %}
+
+
+        
+
+      </ul>
+    </li>
+{% if request.user|has_group:"operator" %}
+    <li>
+      <a href="{% url 'cpage' %}" class="sf-with-ul">Admin</a>
+
+      <div class="megamenu megamenu-sm">
+        <div class="row no-gutters">
+          <div class="col-md-6">
+            <div class="menu-col">
+              <div class="menu-title">Admin | Control </div>
+              <!-- End .menu-title -->
+              <ul>
+                <li><a href="{% url 'makanan' %}">Makanan</a></li>
+                <li><a href="{% url 'minuman' %}">Minuman</a></li>
+                
+              </ul>
+            </div>
+            <!-- End .menu-col -->
+          </div>
+          <!-- End .col-md-6 -->
+
+          <div class="col-md-6">
+            <div class="banner banner-overlay">
+              <a href="category.html">
+                <img src="{% static 'assets/images/menu/banner-2.jpg' %}" alt="Banner" />
+
+                <div class="banner-content banner-content-bottom">
+                  <div class="banner-title text-white">
+                    New Trends<br /><span><strong>spring 2019</strong></span>
+                  </div>
+                  <!-- End .banner-title -->
+                </div>
+                <!-- End .banner-content -->
+              </a>
+            </div>
+            <!-- End .banner -->
+          </div>
+          <!-- End .col-md-6 -->
+        </div>
+        <!-- End .row -->
+      </div>
+      <!-- End .megamenu megamenu-sm -->
+    </li>
+{% endif %}
+   
+    
+  </ul>
+  <!-- End .menu -->
+</nav>
+<!-- End .main-nav -->
+</div>
+<!-- End .header-center -->
+
+<div class="header-right">
+<i class="la la-lightbulb-o"></i>
+<p>Online<span class="highlight">&nbsp;Warung makan gresik</span></p>
+</div>
+</div>
+<!-- End .container -->
+</div>
+<!-- End .header-bottom -->
+</header>
+<!-- End .header -->
+<main class="main">
+  <div class="intro-slider-container mb-5">
+    <div
+      class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light"
+      data-toggle="owl"
+      data-owl-options='{
+                        "dots": true,
+                        "nav": false, 
+                        "responsive": {
+                            "1200": {
+                                "nav": true,
+                                "dots": false
+                            }
+                        }
+                    }'
+    >
+      {% for i in cate1 %}
+      <div class="intro-slide" style="background-image: url({{i.img.url}})">
+        <div class="container intro-content">
+          <div class="row justify-content-end">
+            <div class="col-auto col-sm-7 col-md-6 col-lg-5">
+              <!-- End .h3 intro-subtitle -->
+              <mark class="intro-title">{{i.name}}</mark><br />
+              <!-- End .intro-title -->
+
+              <!-- End .intro-price -->
+
+              <a href="Makanan" class="btn btn-primary btn-round" style="margin-top: 2rem">
+                <span>Lihat selengkapnya</span>
+                <i class="icon-long-arrow-right"></i>
+              </a>
+            </div>
+            <!-- End .col-lg-11 offset-lg-1 -->
+          </div>
+          <!-- End .row -->
+        </div>
+        <!-- End .intro-content -->
+      </div>
+      <!-- End .intro-slide -->
+      {% endfor %} {% for i in cate2 %}
+      <div class="intro-slide" style="background-image: url({{i.img.url}})">
+        <div class="container intro-content">
+          <div class="row justify-content-end">
+            <div class="col-auto col-sm-7 col-md-6 col-lg-5">
+              <!-- End .h3 intro-subtitle -->
+              <mark class="intro-title">{{i.name}}</mark><br />
+              <!-- End .intro-title -->
+
+              <!-- End .intro-price -->
+
+              <a href="Minuman" class="btn btn-primary btn-round" style="margin-top: 2rem">
+                <span>Lihat selengkapnya</span>
+                <i class="icon-long-arrow-right"></i>
+              </a>
+            </div>
+            <!-- End .col-lg-11 offset-lg-1 -->
+          </div>
+          <!-- End .row -->
+        </div>
+        <!-- End .intro-content -->
+      </div>
+      <!-- End .intro-slide -->
+      {% endfor %}
+    </div>
+    <!-- End .intro-slider owl-carousel owl-simple -->
+
+    <span class="slider-loader"></span
+    ><!-- End .slider-loader -->
+  </div>
+  <!-- End .intro-slider-container -->
+
+  <div class="container">
+    <!-- End .title text-center -->
+
+    <div class="cat-blocks-container" hidden>
+      <div class="row">
+        <div class="col-6 col-sm-4 col-lg-2">
+          <a href="category.html" class="cat-block">
+            <figure>
+              <span>
+                <img src="{% static 'store/assets/images/demos/demo-4/cats/1.png' %}" alt="Category image" />
+              </span>
+            </figure>
+
+            <h3 class="cat-block-title">Computer & Laptop</h3>
+            <!-- End .cat-block-title -->
+          </a>
+        </div>
+        <!-- End .col-sm-4 col-lg-2 -->
+      </div>
+      <!-- End .row -->
+    </div>
+    <!-- End .cat-blocks-container -->
+  </div>
+  <!-- End .container -->
+
+  
+
+    {% include 'footer.html' %}
+
+    <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form" hidden>
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <div class="row no-gutters bg-white newsletter-popup-content">
+            <div class="col-xl-3-5col col-lg-12 text-center banner-content-wrap">
+              <div class="banner-content text-center">
+                Warung Makan Gresik
+                <h2 class="banner-title">
+                  Anggap aja iklan 
+                </h2>
+                <p>created by brsaputra14</p>
+                <form action="#">
+                  <div class="input-group input-group-round">
+
+                    </div>
+                    <!-- .End .input-group-append -->
+                  </div>
+                  <!-- .End .input-group -->
+                </form>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="register-policy-2" required />
+                  {% comment %} <label class="custom-control-label" for="register-policy-2">Jangan munculkan pop up ini lagi!</label> {% endcomment %}
+                </div>
+                <!-- End .custom-checkbox -->
+              </div>
+            </div>
+            <div class="col-xl-2-8col col-lg-13">
+              <img src="{% static 'banner.jpg' %}" class="newsletter-img" alt="newsletter" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'js/iziToast.js' %}"></script>
+    <script src="{% static 'js/iziToast.min.js' %}"></script>
+    {% comment %} <script>
+      iziToast.show({
+        theme: 'dark',
+        icon: 'fa-regular fa-user',
+        title: 'Selamat datang',
+        message: '{{user}}!',
+        position: 'center', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+        progressBarColor: 'rgb(0, 255, 184)',
+        
+        onOpening: function(instance, toast){
+            console.info('callback abriu!');
+        },
+        onClosing: function(instance, toast, closedBy){
+            console.info('closedBy: ' + closedBy); // tells if it was closed by 'drag' or 'button'
+        }
+    });
+    </script> {% endcomment %}
+
+
+    {% endblock content %}
+  </div>
+</main>
